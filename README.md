@@ -1,5 +1,5 @@
-Integrantes 
+*Integrantes*
 
-Henrique Santos
-Eric Miguel
+Henrique Santos<br>
+Eric Miguel<br>
 Nicolas
