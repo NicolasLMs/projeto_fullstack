@@ -1,34 +1,34 @@
-from model.usuario_model import db
-from model.usuario_model import Usuario
-import requests
-from flask import request, jsonify
+from model.usuario_model import Usuario, usuarios
 
 
-class usuario_controller:
+class UsuarioService:
     @staticmethod
-    def criar_usuario():
-        data = request.get_json()
-        usuario = Usuario(
-                cnpj = data.get('cnpj'),
-                email = data.get('email'),
-                celular = data.get('celular')
-            )
-        db.session.add(usuario)
-        db.session.commit()
-        return jsonify({'mensagem': 'Usuário cadastrado com sucesso'}),201
+    def criar_usuario(cpf, nome, email, senha):
+        if any(u.cpf == cpf for u in usuarios):
+            return None, 'CPF já cadastrado'
+        
+        usuario = Usuario(cpf, nome, email, senha)
+        usuarios.append(usuario)
+        return usuario, 'Usuário criado com sucesso'
     
-
     @staticmethod
-    def listar_usuario():
-        usuario = Usuario.query.all()
-        return jsonify([{
-           'id' : usuario.id,
-           'cnpj': usuario.cnpj,
-           'email' : usuario.email,
-           'celular' : usuario.celular,
-           'status' : usuario.status
-           } for usuario in usuario
-           ])
+    def listar_todos():
+        return usuarios
+    
+    @staticmethod
+    def buscar_por_cpf(cpf):
+        for usuario in usuarios:
+            if usuario.cpf == cpf:
+                return usuario
+        return None
+    
+    @staticmethod
+    def deletar_usuario(cpf):
+        for i, usuario in enumerate(usuarios):
+            if usuario.cpf == cpf:
+                usuarios.pop(i)
+                return True
+        return False
     
 
 
